@@ -1,5 +1,5 @@
 {
-  "name": "@3nsoft/napi-nacl",
+  "name": "napi-nacl",
   "version": "1.0.0",
   "description": "Multi-threaded NaCl cryptor module for Node written in Rust",
   "main": "index.js",
