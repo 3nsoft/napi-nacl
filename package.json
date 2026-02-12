@@ -1,6 +1,6 @@
 {
   "name": "napi-nacl",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Multi-threaded NaCl cryptor module for Node written in Rust",
   "main": "index.js",
   "repository": {
@@ -8,6 +8,24 @@
     "url": "https://github.com/3nsoft/napi-nacl.git"
   },
   "license": "GPL-3.0-or-later",
+  "keywords": [
+    "encryption",
+    "high-level",
+    "crypto",
+    "nacl",
+    "scrypt"
+  ],
+  "author": {
+    "name": "3NSoft Inc.",
+    "url": "https://3nsoft.com",
+    "email": "hq@3nsoft.com"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node",
+    "README.md"
+  ],
   "napi": {
     "binaryName": "napi-nacl",
     "targets": [
