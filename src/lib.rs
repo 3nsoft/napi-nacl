@@ -1,4 +1,4 @@
-// Copyright(c) 2025 3NSoft Inc.
+// Copyright(c) 2025 - 2026 3NSoft Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,24 @@ use dashmap::DashMap;
 use std::sync::Arc;
 use nacl;
 
+#[napi]
+pub enum EncrResult {
+  Ok(Buffer),
+	CipherVerificationErr,
+	SignatureVerificationErr,
+	ConfigurationErr(String)
+}
+
+fn into_napi_ok(nacl_result: core::result::Result<Vec<u8>, nacl::Error>) -> Result<EncrResult> {
+  match nacl_result {
+    Ok(buf) => Ok(EncrResult::Ok(buf.into())),
+    Err(err) => match err.condition {
+      nacl::ErrorCondition::CipherVerification => Ok(EncrResult::CipherVerificationErr),
+      nacl::ErrorCondition::SignatureVerification => Ok(EncrResult::SignatureVerificationErr),
+      nacl::ErrorCondition::Configuration => Ok(EncrResult::ConfigurationErr(err.message)),
+    }
+  }
+}
 
 macro_rules! compute_in {
   ($self:ident, $code:expr) => {
@@ -48,10 +66,7 @@ macro_rules! compute_under_label_in {
         $code
       }).await.unwrap();
       $self.decrement_label_count($work_label);
-      match result {
-        Ok(r) => Ok(r.into()),
-        Err(err) => Err(Error::from_reason(err.message))
-      }
+      into_napi_ok(result)
     }
   }
 }
@@ -112,22 +127,22 @@ impl JsAsyncSBoxCryptor {
   }
 
   #[napi]
-  pub async fn open(&self, c: Buffer, n: Buffer, k: Buffer, work_label: u32) -> Result<Buffer> {
+  pub async fn open(&self, c: Buffer, n: Buffer, k: Buffer, work_label: u32) -> Result<EncrResult> {
     compute_under_label_in!(self, work_label, nacl::secret_box::open(&c, &n, &k))
   }
 
   #[napi]
-  pub async fn pack(&self, m: Buffer, n: Buffer, k: Buffer, work_label: u32) -> Result<Buffer> {
+  pub async fn pack(&self, m: Buffer, n: Buffer, k: Buffer, work_label: u32) -> Result<EncrResult> {
     compute_under_label_in!(self, work_label, nacl::secret_box::pack(&m, &n, &k))
   }
 
   #[napi]
-  pub async fn open_format_w_n(&self, c: Buffer, k: Buffer, work_label: u32) -> Result<Buffer> {
+  pub async fn open_format_w_n(&self, c: Buffer, k: Buffer, work_label: u32) -> Result<EncrResult> {
     compute_under_label_in!(self, work_label, nacl::secret_box::format_wn::open(&c, &k))
   }
 
   #[napi]
-  pub async fn pack_format_w_n(&self, m: Buffer, n: Buffer, k: Buffer, work_label: u32) -> Result<Buffer> {
+  pub async fn pack_format_w_n(&self, m: Buffer, n: Buffer, k: Buffer, work_label: u32) -> Result<EncrResult> {
     compute_under_label_in!(self, work_label, nacl::secret_box::format_wn::pack(&m, &n, &k))
   }
 

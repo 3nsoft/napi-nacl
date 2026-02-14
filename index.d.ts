@@ -8,10 +8,10 @@ export type JsAsyncPBox = AsyncPBox
 
 export declare class AsyncSBoxCryptor {
   canStartUnderWorkLabel(workLabel: number): number
-  open(c: Buffer, n: Buffer, k: Buffer, workLabel: number): Promise<Buffer>
-  pack(m: Buffer, n: Buffer, k: Buffer, workLabel: number): Promise<Buffer>
-  openFormatWN(c: Buffer, k: Buffer, workLabel: number): Promise<Buffer>
-  packFormatWN(m: Buffer, n: Buffer, k: Buffer, workLabel: number): Promise<Buffer>
+  open(c: Buffer, n: Buffer, k: Buffer, workLabel: number): Promise<EncrResult>
+  pack(m: Buffer, n: Buffer, k: Buffer, workLabel: number): Promise<EncrResult>
+  openFormatWN(c: Buffer, k: Buffer, workLabel: number): Promise<EncrResult>
+  packFormatWN(m: Buffer, n: Buffer, k: Buffer, workLabel: number): Promise<EncrResult>
 }
 export type JsAsyncSBoxCryptor = AsyncSBoxCryptor
 
@@ -38,6 +38,12 @@ export declare class Keypair {
 export type JsKeypair = Keypair
 
 export declare function copyNonceFromFormatWN(c: Buffer): Buffer
+
+export type EncrResult =
+  | { type: 'Ok', field0: Buffer }
+  | { type: 'CipherVerificationErr' }
+  | { type: 'SignatureVerificationErr' }
+  | { type: 'ConfigurationErr', field0: string }
 
 export const PBOX_JWK_ALG_NAME: string
 
