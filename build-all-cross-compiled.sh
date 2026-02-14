@@ -3,6 +3,6 @@ do
   echo "-----------------------------------------------"
   echo "|  compiling for $target"
   echo "-----------------------------------------------"
-  npm run build -- --cross-compile --target $target || exit $?
+  npm run compile-napi -- --cross-compile --target $target || exit $?
   echo
 done

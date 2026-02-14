@@ -1,8 +1,8 @@
 {
   "name": "napi-nacl",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Multi-threaded NaCl cryptor module for Node written in Rust",
-  "main": "index.js",
+  "main": "native-cryptor.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/3nsoft/napi-nacl.git"
@@ -21,10 +21,11 @@
     "email": "hq@3nsoft.com"
   },
   "files": [
-    "index.js",
-    "index.d.ts",
+    "*.js",
+    "*.ts",
     "*.node",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "napi": {
     "binaryName": "napi-nacl",
@@ -41,8 +42,10 @@
     "node": ">= 12.22.0 < 13 || >= 14.17.0 < 15 || >= 15.12.0 < 16 || >= 16.0.0"
   },
   "scripts": {
-    "build": "napi build --platform --release",
-    "build-all-targets": "bash build-all-cross-compiled.sh",
+    "compile-napi": "napi build --platform --release",
+    "compile-all-targets": "bash build-all-cross-compiled.sh",
+    "compile-ts": "tsc",
+    "build-all": "npm run compile-all-targets && npm run compile-ts",
     "build:debug": "napi build --platform",
     "format": "run-p format:prettier format:rs format:toml",
     "format:prettier": "prettier . -w",
