@@ -1,6 +1,6 @@
 {
   "name": "napi-nacl",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Multi-threaded NaCl cryptor module for Node written in Rust",
   "main": "native-cryptor.js",
   "repository": {
